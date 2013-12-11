@@ -5,6 +5,8 @@ How to run it:
 
 1) Install gvm:
   curl -s get.gvmtool.net | bash
+  And run:
+  source "/home/ubuntu/.gvm/bin/gvm-init.sh"
 
 2) Install groovy:
   gvm install groovy 2.1.6
@@ -14,7 +16,7 @@ How to run it:
   git clone https://github.com/mwaisgold/telnet-chat.git
 
 4) Go into src folder:
-  cd src/
+  cd telnet-chat/src/
 
 5) Run the server:
   groovy base.groovy
