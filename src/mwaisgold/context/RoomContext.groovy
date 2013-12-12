@@ -1,6 +1,7 @@
 package mwaisgold.context
 
 import mwaisgold.domain.Room
+import mwaisgold.persistance.BasicPersistor
 
 /**
  * User: mwaisgold
@@ -26,6 +27,8 @@ class RoomContext extends LoggedContext {
             case ~$//leave/$: return leaveRoom()
             case ~$//emoticons/$: showEmoticons()
                 break
+            case ~$//secure/$: return secureRoom()
+                break
             default:
                 def emoticon = emoticones[line]
                 if (emoticon)
@@ -35,6 +38,16 @@ class RoomContext extends LoggedContext {
         }
 
         this
+    }
+
+    def secureRoom() {
+        if (room.creator == loggedUser){
+            println("Enter new password for this room:")
+            new SecureRoomContext(out: out, loggedUser: loggedUser, room: room)
+        } else {
+            println "You are not allowed to do this operation"
+            this
+        }
     }
 
     def showEmoticons() {
@@ -60,5 +73,6 @@ class RoomContext extends LoggedContext {
         println "/help shows this message"
         println "/emoticons shows available emoticons"
         println "/leave leaves this room"
+        println "/kick \$USER_NAME kicks user from room"
     }
 }

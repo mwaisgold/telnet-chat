@@ -21,11 +21,17 @@ class MenuContext extends LoggedContext {
             case ~$//createRoom .*/$: createRoom(line)
                 break
             case ~$//join .*/$: return joinRoom(line)
+            case ~$//register/$: return registerUser()
             case ~$//quit/$: quit()
 
         }
 
         this
+    }
+
+    Context registerUser() {
+        println("Enter new password for user:")
+        new RegisterUserContext(out: out, loggedUser: loggedUser)
     }
 
     def quit() {
@@ -42,12 +48,18 @@ class MenuContext extends LoggedContext {
 
         def roomName = split.last()
         def room = BasicPersistor.joinRoom(roomName, loggedUser)
-        println("entering room: $roomName")
-        room.currentUsers.each {
-            println " * $it.userName" + (it == loggedUser ? " (** this is you)" : "")
+
+        if (room.creator != loggedUser && room.password){
+            println "Enter password for room"
+            new RoomPasswordRequiredContext(out: out, loggedUser: loggedUser, room: room)
+        } else {
+            println("entering room: $roomName")
+            room.currentUsers.each {
+                println " * $it.userName" + (it == loggedUser ? " (** this is you)" : "")
+            }
+            room.sendMessage("* new user joined chat: $loggedUser.userName", loggedUser)
+            return new RoomContext(room: room, loggedUser: loggedUser, out: out)
         }
-        room.sendMessage("* new user joined chat: $loggedUser.userName", loggedUser)
-        return new RoomContext(room: room, loggedUser: loggedUser, out: out)
 
     }
 

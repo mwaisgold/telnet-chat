@@ -16,8 +16,15 @@ class LoginContext extends AbstractContext {
             try {
                 def user = BasicPersistor.addUser(line)
                 user.output = out
-                println "Welcome $line!"
-                new MenuContext(out: out, loggedUser: user)
+                if (user.isAnonymus){
+                    println "Welcome $line!"
+                    new MenuContext(out: out, loggedUser: user)
+                } else {
+                    println "User $line needs authentication"
+                    new PasswordRequiredContext(out: out, loggedUser: user)
+                }
+
+
             } catch (IllegalArgumentException e) {
                 println "Sorry, name taken"
                 askUser()

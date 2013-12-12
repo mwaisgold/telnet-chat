@@ -1,5 +1,7 @@
 package mwaisgold.context
 
+import mwaisgold.domain.User
+
 /**
  * User: mwaisgold
  * Date: 12/11/13
@@ -8,5 +10,5 @@ package mwaisgold.context
  
 abstract class LoggedContext extends AbstractContext {
 
-    def loggedUser
+    User loggedUser
 }

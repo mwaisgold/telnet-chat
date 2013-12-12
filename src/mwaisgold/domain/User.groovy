@@ -26,4 +26,8 @@ class User {
     int hashCode() {
         return userName.hashCode()
     }
+
+    def isLoggedIn(){
+        output != null
+    }
 }

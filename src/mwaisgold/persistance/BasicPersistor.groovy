@@ -16,17 +16,20 @@ class BasicPersistor {
     private rooms = [] as HashSet
 
     static synchronized addUser(userName){
-        def user = new User(userName: userName)
-        if (user in BasicPersistor.instance.users){
+        //def user = new User(userName: userName)
+        User user = BasicPersistor.instance.users.find { it.userName == userName }
+        if (user && user.isLoggedIn()){
             throw new IllegalArgumentException("User already taken")
-        } else {
+        } else if (!user){
+            user = new User(userName: userName)
             BasicPersistor.instance.users << user
-            return user
         }
+        user
     }
 
     static clear(){
-        BasicPersistor.instance.users = []
+        BasicPersistor.instance.users = [] as HashSet
+        BasicPersistor.instance.rooms = [] as HashSet
     }
 
     static synchronized addRoom(roomName, user){
@@ -46,7 +49,20 @@ class BasicPersistor {
         room
     }
 
-    static synchronized removeUser(user) {
-        BasicPersistor.instance.users.remove(user)
+    static synchronized removeUser(User user) {
+        user.output = null //clean output
+    }
+
+    static saveNewPassword(User user, password) {
+        user.isAnonymus = false
+        user.password = password
+    }
+
+    static findUserByName(userName) {
+        BasicPersistor.instance.users.find { it.userName == userName }
+    }
+
+    static saveNewRoomPassword(Room room, password) {
+        room.password = password
     }
 }
