@@ -26,6 +26,7 @@ class RoomPasswordRequiredContext extends LoggedContext{
             attempts++
             println "Invalid password!"
             if (attempts > MAX_INVALID_ATTEMPTS){
+                println "Maximum attempts quantity exceeded"
                 room.currentUsers.remove(loggedUser)
                 return new MenuContext(out: out, loggedUser: loggedUser)
             }

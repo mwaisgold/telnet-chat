@@ -73,6 +73,6 @@ class RoomContext extends LoggedContext {
         println "/help shows this message"
         println "/emoticons shows available emoticons"
         println "/leave leaves this room"
-        println "/kick \$USER_NAME kicks user from room"
+        println "/secure Adds authentication to this room"
     }
 }
