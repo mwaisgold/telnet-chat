@@ -12,16 +12,30 @@ import mwaisgold.domain.User
 @Singleton
 class BasicPersistor {
 
+    def redisPersistor = new RedisPersistor()
+
     private users = [] as HashSet
     private rooms = [] as HashSet
 
+    BasicPersistor(){
+        users += this.redisPersistor.allUsers
+        rooms += this.redisPersistor.allRooms.collect { roomMap ->
+            roomMap.creator = users.find { it.userName == roomMap.creator }
+            new Room(roomMap)
+        }
+    }
+
+    static private getRedisPersistor(){
+        BasicPersistor.instance.@redisPersistor
+    }
+
     static synchronized addUser(userName){
-        //def user = new User(userName: userName)
         User user = BasicPersistor.instance.users.find { it.userName == userName }
         if (user && user.isLoggedIn()){
             throw new IllegalArgumentException("User already taken")
         } else if (!user){
             user = new User(userName: userName)
+            getRedisPersistor().saveUser(user)
             BasicPersistor.instance.users << user
         }
         user
@@ -37,6 +51,7 @@ class BasicPersistor {
         if (room in BasicPersistor.instance.rooms){
             throw new IllegalArgumentException("Room already exists")
         } else {
+            getRedisPersistor().saveRoom(room)
             BasicPersistor.instance.rooms << room
             return room
         }
@@ -56,6 +71,7 @@ class BasicPersistor {
     static saveNewPassword(User user, password) {
         user.isAnonymus = false
         user.password = password
+        getRedisPersistor().saveUser(user)
     }
 
     static findUserByName(userName) {
@@ -64,5 +80,6 @@ class BasicPersistor {
 
     static saveNewRoomPassword(Room room, password) {
         room.password = password
+        getRedisPersistor().saveRoom(room)
     }
 }
