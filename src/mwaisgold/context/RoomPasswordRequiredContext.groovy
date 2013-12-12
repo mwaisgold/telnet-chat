@@ -1,6 +1,7 @@
 package mwaisgold.context
 
 import mwaisgold.domain.Room
+import mwaisgold.utils.PasswordUtils
 
 /**
  * User: mwaisgold
@@ -15,7 +16,7 @@ class RoomPasswordRequiredContext extends LoggedContext{
 
     @Override
     Context executeContext(line) {
-        if (room.password == line){
+        if (room.password == PasswordUtils.hashPassword(line)){
             println("entering room: $room.name")
             room.currentUsers.each {
                 println " * $it.userName" + (it == loggedUser ? " (** this is you)" : "")

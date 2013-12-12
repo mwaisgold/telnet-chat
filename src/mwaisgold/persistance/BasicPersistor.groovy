@@ -2,6 +2,7 @@ package mwaisgold.persistance
 
 import mwaisgold.domain.Room
 import mwaisgold.domain.User
+import mwaisgold.utils.PasswordUtils
 
 /**
  * User: mwaisgold
@@ -70,7 +71,7 @@ class BasicPersistor {
 
     static saveNewPassword(User user, password) {
         user.isAnonymus = false
-        user.password = password
+        user.password = PasswordUtils.hashPassword(password)
         getRedisPersistor().saveUser(user)
     }
 
@@ -79,7 +80,7 @@ class BasicPersistor {
     }
 
     static saveNewRoomPassword(Room room, password) {
-        room.password = password
+        room.password = PasswordUtils.hashPassword(password)
         getRedisPersistor().saveRoom(room)
     }
 }

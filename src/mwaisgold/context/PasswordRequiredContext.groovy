@@ -1,5 +1,7 @@
 package mwaisgold.context
 
+import mwaisgold.utils.PasswordUtils
+
 /**
  * User: mwaisgold
  * Date: 12/12/13
@@ -13,7 +15,7 @@ class PasswordRequiredContext extends LoggedContext{
 
     @Override
     Context executeContext(line) {
-        if (loggedUser.password == line){
+        if (loggedUser.password == PasswordUtils.hashPassword(line)){
             println "Welcome back $loggedUser.userName!"
             new MenuContext(out: out, loggedUser: loggedUser)
         } else {
