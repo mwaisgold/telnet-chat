@@ -1,6 +1,14 @@
 telnet-chat
 ===========
 
+Pre install requirements:
+
+1) Install redis:
+  brew install redis
+
+2) Run redis server:
+  redis-server
+
 How to run it:
 
 1) Install gvm:
